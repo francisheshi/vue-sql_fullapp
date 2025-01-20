@@ -6,78 +6,78 @@
     </button>
 
     <div v-show="isOpen">
-      <div v-if="loading">Loading data...</div>
-      <table class="table-container">
-        <thead>
-          <tr class="bg-gray-200 text-red-500">
-            <!-- Bind headers from the store -->
-            <th v-for="(header, index) in tableDataStore.headers" :key="index" class="table-header">
-              {{ header }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <!-- Bind rows from the store -->
-          <tr v-for="(row, rowIndex) in tableDataStore.rows" :key="rowIndex" class="table-row">
-            <td v-for="(cell, cellIndex) in row" :key="cellIndex" class="table-cell">
-              {{ cell }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <!-- <div v-if="!loading">Loading data...</div> -->
+      <div v-show="!loading">
+        <div v-if="!tableDataStore.rows || tableDataStore.rows.length === 0">No data available</div>
+
+        <table
+          class="table-container"
+          v-show="tableDataStore.rows && tableDataStore.rows.length > 0"
+        >
+          <thead>
+            <tr class="bg-gray-200 text-red-500">
+              <th
+                v-for="(header, index) in tableDataStore.headers"
+                :key="index"
+                class="table-header"
+              >
+                {{ header }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(row, rowIndex) in tableDataStore.rows" :key="rowIndex" class="table-row">
+              <td class="table-cell">
+                {{ row.name }}
+              </td>
+              <td class="table-cell">
+                {{ row.age }}
+              </td>
+              <td class="table-cell">
+                {{ row.email }}
+              </td>
+              <td class="table-cell">
+                {{ row.address }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
-import axios from 'axios'
 import { useTableStore } from '@/stores/tableStore'
-
-export interface ApiResponse {
-  headers: string[]
-  rows: string[][]
-}
+import { defineComponent } from 'vue'
+import axios from 'axios'
 
 export default defineComponent({
   name: 'DataTable',
-  props: {
-    headers: {
-      type: Array as PropType<{ headers: string }[]>, // Define the type for headers as an array of RowData
-      required: true,
-    },
-    rows: {
-      type: Array as PropType<{ rows: string }[]>, // Define the type for headers as an array of RowData
-      required: true,
-    },
-  },
-  data() {
-    const tableDataStore = useTableStore()
-    return {
-      error: null as string | null,
-      localHeaders: [] as string[],
-      localRows: [] as string[][],
-      tableDataStore,
-      isOpen: false,
-      loading: true,
-    }
-  },
+  data: () => ({
+    error: null as string | null,
+    tableDataStore: useTableStore(),
+    loading: true,
+    isOpen: false,
+    headers: [],
+    rows: [],
+  }),
   methods: {
     toggleCollapse() {
       this.isOpen = !this.isOpen
     },
     async fetchTableData() {
-      try {
-        const response = await axios.get('http://localhost:5000/api/tableData')
-        this.tableDataStore.setTableData(response.data)
-        this.loading = false
-      } catch (error) {
-        console.error('Error fetching table data:', error.toJSON())
-        this.loading = false
-      }
+      this.loading = true
+      axios
+        .get('http://localhost:5000/api/tableData')
+        .then((response) => {
+          this.loading = false
+          this.tableDataStore = response.data
+        })
+        .catch((error) => console.log(error))
     },
   },
-  created() {
+  mounted() {
     this.fetchTableData()
   },
 })
@@ -85,35 +85,35 @@ export default defineComponent({
 
 <style scoped>
 .expand-btn {
-  background-color: #3b82f6;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
-  margin-bottom: 1rem;
   transition: background-color 0.2s;
+  background-color: #3b82f6;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  color: white;
 }
 .expand-btn:hover {
   background-color: #2563eb;
 }
 .title {
+  margin-bottom: 1rem;
   font-size: 2.5rem;
   font-weight: bold;
-  margin-bottom: 1rem;
 }
 .table-container {
-  width: 100%;
-  background-color: white;
   border: 1px solid #131416;
+  background-color: white;
+  width: 100%;
 }
 .table-header {
-  padding: 0.75rem 1.5rem;
-  text-align: left;
-  font-size: 1.015rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #b62d5b;
   background-color: #3ecab3;
   border: 1px solid #0d1629;
+  text-transform: uppercase;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.015rem;
+  text-align: left;
+  font-weight: 600;
+  color: #b62d5b;
 }
 .table-header:hover {
   animation: backgroundChange 2s ease-in-out infinite;
@@ -136,13 +136,13 @@ export default defineComponent({
   }
 }
 .table-cell {
-  padding: 0.75rem 1.5rem;
-  font-size: 0.975rem;
-  color: #9e3a13;
+  transition: background-color 0.5s ease-in-out;
   background-color: #1ab31a;
   border: 1px solid #031538;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.975rem;
   white-space: nowrap;
-  transition: background-color 0.5s ease-in-out;
+  color: #9e3a13;
 }
 .table-cell:hover {
   animation: backgroundChange 2s ease-in-out infinite;

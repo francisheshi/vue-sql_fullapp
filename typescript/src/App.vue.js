@@ -7,7 +7,7 @@ export default (await import('vue')).defineComponent({
   data() {
     return {
       headers: ['Name', 'Age', 'Email', 'Address'],
-      tableRows: [
+      rows: [
         ['John Doe', '30', 'johndoe@gmail.com', '123 Main St'],
         ['Jane Smith', '25', 'janesmith@hotmail.com', '456 Maple Ave'],
         ['Sam Wilson', '28', 'samwilson@gmail.com', '789 Oak Dr'],

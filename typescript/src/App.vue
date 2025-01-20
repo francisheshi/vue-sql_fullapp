@@ -8,7 +8,15 @@
 
     <!-- Page Content -->
     <main class="main-content">
-      <router-view :headers="headers" :rows="tableRows" />
+      <!-- <router-view :headers="headers" :rows="rows" /> -->
+      <router-view
+        ref="myTable"
+        :headers="headers"
+        :items="tableData"
+        :items-per-page="10"
+        class="elevation-1"
+      >
+      </router-view>
     </main>
   </div>
 </template>
@@ -23,13 +31,20 @@ export default {
   },
   data() {
     return {
-      headers: ['Name', 'Age', 'Email', 'Address'],
-      tableRows: [
-        ['John Doe', '30', 'johndoe@gmail.com', '123 Main St'],
-        ['Jane Smith', '25', 'janesmith@hotmail.com', '456 Maple Ave'],
-        ['Sam Wilson', '28', 'samwilson@gmail.com', '789 Oak Dr'],
-        ['Franci Sheshi', '24', 'francisheshi6@gmail.com', 'Haxhi Sina, apartment 6/1'],
-      ],
+      tableData: [],
+      headers: [],
+      // headers: ['Name', 'Age', 'Email', 'Address'],
+      // rows: [
+      //   { Name: 'John Doe', Age: 30, Email: 'johndoe@gmail.com', Address: '123 Main St' },
+      //   { Name: 'Jane Smith', Age: 25, Email: 'janesmith@hotmail.com', Address: '456 Maple Ave' },
+      //   { Name: 'Sam Wilson', Age: 28, Email: 'samwilson@gmail.com', Address: '789 Oak Dr' },
+      //   {
+      //     Name: 'Franci Sheshi',
+      //     Age: 24,
+      //     Email: 'francisheshi6@gmail.com',
+      //     Address: 'Haxhi Sina, apartment 6/1',
+      //   },
+      // ],
     }
   },
 }

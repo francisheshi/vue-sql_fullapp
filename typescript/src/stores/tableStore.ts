@@ -1,21 +1,27 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-// In your store definition
-export interface TableStoreData {
-  headers: string[]
-  rows: string[][]
+interface RowData {
+  [key: string]: string | number | null
 }
 
-export const useTableStore = defineStore({
-  id: 'tableStore',
-  state: (): TableStoreData => ({
-    headers: [],
-    rows: [],
-  }),
-  actions: {
-    setTableData(data: TableStoreData) {
-      this.headers = data.headers
-      this.rows = data.rows
-    },
-  },
+interface TableData {
+  headers: string[]
+  rows: RowData[]
+}
+
+export const useTableStore = defineStore('tableStore', () => {
+  const headers = ref<string[]>([])
+  const rows = ref<RowData[]>([])
+
+  const setTableData = (data: TableData) => {
+    headers.value = data.headers
+    rows.value = data.rows
+  }
+
+  return {
+    headers,
+    rows,
+    setTableData,
+  }
 })
