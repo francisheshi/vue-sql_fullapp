@@ -6,76 +6,73 @@
     </button>
 
     <div v-show="isOpen">
-      <!-- <div v-if="!loading">Loading data...</div> -->
-      <div v-show="!loading">
-        <div v-if="!tableDataStore.rows || tableDataStore.rows.length === 0">No data available</div>
-
-        <table
-          class="table-container"
-          v-show="tableDataStore.rows && tableDataStore.rows.length > 0"
-        >
+      <template v-if="tableData.rows && tableData.rows.length">
+        <v-data-table class="table-container">
           <thead>
             <tr class="bg-gray-200 text-red-500">
-              <th
-                v-for="(header, index) in tableDataStore.headers"
-                :key="index"
-                class="table-header"
-              >
-                {{ header }}
-              </th>
+              <th class="table-header">NAME</th>
+              <th class="table-header">AGE</th>
+              <th class="table-header">EMAIL</th>
+              <th class="table-header">ADDRESS</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(row, rowIndex) in tableDataStore.rows" :key="rowIndex" class="table-row">
-              <td class="table-cell">
-                {{ row.name }}
-              </td>
-              <td class="table-cell">
-                {{ row.age }}
-              </td>
-              <td class="table-cell">
-                {{ row.email }}
-              </td>
-              <td class="table-cell">
-                {{ row.address }}
+            <tr v-for="(row, rowIndex) in tableData.rows" :key="rowIndex" class="table-row">
+              <td v-for="(cell, cellIndex) in row" :key="cellIndex" class="table-cell">
+                {{ cell }}
               </td>
             </tr>
           </tbody>
-        </table>
-      </div>
+        </v-data-table>
+      </template>
+      <p v-else>No data available</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { useTableStore } from '@/stores/tableStore'
 import { defineComponent } from 'vue'
 import axios from 'axios'
+import { mapGetters } from 'vuex'
+
+interface TableData {
+  headers: string[]
+  rows: string[][]
+}
 
 export default defineComponent({
   name: 'DataTable',
-  data: () => ({
-    error: null as string | null,
-    tableDataStore: useTableStore(),
-    loading: true,
-    isOpen: false,
-    headers: [],
-    rows: [],
-  }),
+  data() {
+    return {
+      isOpen: false,
+      tableData: {
+        headers: [],
+        rows: [],
+      },
+    }
+  },
   methods: {
+    async fetchTableData() {
+      try {
+        const response = await axios.get<TableData>('/api/table-data')
+
+        if (response.data) {
+          console.log('Fetched table data:', response.data)
+        }
+        this.tableData.headers = response.data
+        this.tableData.rows = response.data
+      } catch (error) {
+        console.error('Error fetching table data:', error)
+      }
+    },
     toggleCollapse() {
       this.isOpen = !this.isOpen
     },
-    async fetchTableData() {
-      this.loading = true
-      axios
-        .get('http://localhost:5000/api/tableData')
-        .then((response) => {
-          this.loading = false
-          this.tableDataStore = response.data
-        })
-        .catch((error) => console.log(error))
-    },
+  },
+  computed: {
+    ...mapGetters({
+      dataTable: 'dataTable',
+    }),
   },
   mounted() {
     this.fetchTableData()

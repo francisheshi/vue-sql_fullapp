@@ -5,6 +5,6 @@ const tableDataRoutes = require("./tableData");
 const router = express.Router();
 
 router.use("/products", productsRoutes);
-router.use("/tableData", tableDataRoutes);
+router.use("/table-data", tableDataRoutes);
 
 module.exports = router;

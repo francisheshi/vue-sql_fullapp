@@ -2,7 +2,10 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 interface RowData {
-  [key: string]: string | number | null
+  name: string
+  age: number
+  email: string
+  address: string
 }
 
 interface TableData {
