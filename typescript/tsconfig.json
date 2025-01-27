@@ -14,6 +14,13 @@
       "@/*": ["*"]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue", "src/**/*.js"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "src/**/*.js",
+    "node_modules/vue-chartjs",
+    "node_modules/chart.js"
+  ],
   "exclude": ["node_modules"]
 }

@@ -14,6 +14,7 @@
               <th class="table-header">AGE</th>
               <th class="table-header">EMAIL</th>
               <th class="table-header">ADDRESS</th>
+              <th class="table-header">PROFESSION</th>
             </tr>
           </thead>
           <tbody>
@@ -24,6 +25,8 @@
             </tr>
           </tbody>
         </v-data-table>
+
+        <!-- <ChartNow :tableData="tableData" /> -->
       </template>
       <p v-else>No data available</p>
     </div>
@@ -31,9 +34,10 @@
 </template>
 
 <script lang="ts">
+// import ChartNow from '../charts/ChartNow.vue'
 import { defineComponent } from 'vue'
-import axios from 'axios'
 import { mapGetters } from 'vuex'
+import axios from 'axios'
 
 interface TableData {
   headers: string[]
@@ -42,6 +46,9 @@ interface TableData {
 
 export default defineComponent({
   name: 'DataTable',
+  // components: {
+  //   ChartNow,
+  // },
   data() {
     return {
       isOpen: false,

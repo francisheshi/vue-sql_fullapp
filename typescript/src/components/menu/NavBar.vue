@@ -3,6 +3,7 @@
     <router-link to="/textareas" class="nav-btn">Text Areas</router-link>
     <router-link to="/cards" class="nav-btn">Cards</router-link>
     <router-link to="/tables" class="nav-btn">Tables</router-link>
+    <!-- <router-link to="/charts" class="nav-btn">Charts</router-link> -->
     <router-link to="/todo-list" class="nav-btn">Todo List</router-link>
     <router-link to="/shop-now" class="nav-btn">Shop Now</router-link>
   </nav>

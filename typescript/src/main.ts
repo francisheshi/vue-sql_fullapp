@@ -1,15 +1,18 @@
-import { createApp } from 'vue'
-import App from '@/App.vue'
-import NavBar from '@/components/menu/NavBar.vue'
-import DataTable from '@/views/table/DataTable.vue'
-import TextArea from '@/views/textarea/TextArea.vue'
-import Cards from '@/views/cards/OpenCards.vue'
-import TodoList from '@/views/lists/TodoList.vue'
-import ShoppingList from '@/views/showShop/ShoppingList.vue'
-import AddProduct from '@/components/AddProduct.vue'
-import '@/assets/tailwind.css'
 import { createPinia } from 'pinia'
 import router from '@/router/index'
+import { createApp } from 'vue'
+/* COMPONENT ROUTING */
+import ShoppingList from '@/views/showShop/ShoppingList.vue'
+import TextArea from '@/views/textarea/TextArea.vue'
+import AddProduct from '@/components/AddProduct.vue'
+import DataTable from '@/views/table/DataTable.vue'
+import NavBar from '@/components/menu/NavBar.vue'
+import TodoList from '@/views/lists/TodoList.vue'
+import Cards from '@/views/cards/OpenCards.vue'
+import App from '@/App.vue'
+/* STYLIZATION */
+// import { createTheme, ThemeProvider } from '@mui/material/styles'
+import '@mui/material/styles/createTypography'
 
 const app = createApp(App)
 const pinia = createPinia()

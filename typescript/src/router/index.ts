@@ -8,6 +8,7 @@ import TodoList from '@/views/lists/TodoList.vue'
 import ShoppingList from '@/views/showShop/ShoppingList.vue'
 import AddProduct from '@/components/AddProduct.vue'
 import ProductDetails from '@/components/ProductDetails.vue'
+// import ChartNow from '@/views/charts/ChartNow.vue'
 
 // Define routes
 const routes = [
@@ -17,6 +18,7 @@ const routes = [
   { path: '/todo-list', name: 'TodoList', component: TodoList },
   { path: '/shop-now', name: 'ShoppingList', component: ShoppingList }, // Correct route name
   { path: '/add-product', name: 'AddProduct', component: AddProduct },
+  // { path: '/charts', name: 'ChartNow', component: ChartNow },
   {
     path: '/product/:id',
     name: 'ProductDetails',
