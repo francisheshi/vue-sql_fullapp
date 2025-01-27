@@ -97,6 +97,22 @@ export default defineComponent({
       }
     },
   },
+  async deleteProduct(product: Product) {
+    try {
+      // Make the DELETE request to the server to delete the product
+      await axios.delete(`http://localhost:5000/api/products/${product.id}`)
+
+      if (Array.isArray(this.products)) {
+        this.products = this.products.filter((p) => p.id !== product.id)
+      } else {
+        console.error('Products state is not an array:', this.products)
+      }
+
+      console.log(`Product ${product.id} deleted successfully`)
+    } catch (error) {
+      console.error('Error deleting product:', error.response?.data || error.message)
+    }
+  },
   created() {
     this.fetchProducts()
   },

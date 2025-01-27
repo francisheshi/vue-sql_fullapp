@@ -8,17 +8,19 @@ import TodoList from '@/views/lists/TodoList.vue'
 import ShoppingList from '@/views/showShop/ShoppingList.vue'
 import AddProduct from '@/components/AddProduct.vue'
 import ProductDetails from '@/components/ProductDetails.vue'
-// import ChartNow from '@/views/charts/ChartNow.vue'
+// import SignUp from '../views/SignUp.vue'
+// import SignIn from '../views/SignIn.vue'
 
 // Define routes
 const routes = [
+  // { path: '/signup', component: SignUp },
+  // { path: '/signin', component: SignIn },
   { path: '/tables', name: 'DataTable', component: Table },
   { path: '/textareas', name: 'TextArea', component: TextArea },
   { path: '/cards', name: 'OpenCards', component: OpenCards },
   { path: '/todo-list', name: 'TodoList', component: TodoList },
-  { path: '/shop-now', name: 'ShoppingList', component: ShoppingList }, // Correct route name
+  { path: '/shop-now', name: 'ShoppingList', component: ShoppingList },
   { path: '/add-product', name: 'AddProduct', component: AddProduct },
-  // { path: '/charts', name: 'ChartNow', component: ChartNow },
   {
     path: '/product/:id',
     name: 'ProductDetails',
@@ -31,6 +33,15 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = localStorage.getItem('token')
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/signin')
+  } else {
+    next()
+  }
 })
 
 export default router

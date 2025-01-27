@@ -1,8 +1,14 @@
 <template>
   <div class="product-details-modal">
-    <h2>
-      {{ product?.name || 'Product Details' }}
-    </h2>
+    <div class="name-header">
+      <h2>
+        {{ product?.name || 'Product Details' }}
+      </h2>
+
+      <button class="delete-btn" @click="deleteProduct(product)">
+        <span class="material-icons">🗑️</span>
+      </button>
+    </div>
 
     <div class="content">
       <div class="name-content">
@@ -60,6 +66,7 @@
 import { useProductStore } from '@/stores/prodStore'
 import type { Product } from '@/stores/prodStore'
 import { useRoute } from 'vue-router'
+import axios from 'axios'
 
 export default {
   name: 'ProductDetails',
@@ -104,15 +111,12 @@ export default {
           },
         )
 
-        const updatedData = response.data as Product
+        const updatedData = response.data
         this.productStore.updateProduct(updatedData)
-        this.product = { ...updatedData }
+        this.product = updatedData
         this.isEditing = false
-
-        alert('Product updated successfully!')
       } catch (error) {
         console.error('Error updating product:', error)
-        alert('Failed to update the product. Please try again.')
       }
     },
     saveChanges() {
@@ -128,8 +132,28 @@ export default {
         alert('Please fill in all fields before saving.')
       }
     },
+    async deleteProduct(product: Product) {
+      try {
+        // Make the DELETE request to the server to delete the product
+        await axios.delete(`http://localhost:5000/api/products/${product.id}`)
+
+        if (Array.isArray(this.products)) {
+          this.products = this.products.filter((p) => p.id !== product.id)
+        } else {
+          console.error('Products state is not an array:', this.products)
+        }
+
+        console.log(`Product ${product.id} deleted successfully`)
+      } catch (error) {
+        console.error('Error deleting product:', error.response?.data || error.message)
+      }
+    },
     cancelEdit() {
       this.$router.push('/shop-now')
+      const originalProduct = this.productStore.products.find((p) => p.id === this.product.id)
+      if (originalProduct) {
+        this.product = { ...originalProduct }
+      }
     },
   },
 }
@@ -145,6 +169,10 @@ export default {
   padding: 2.25%;
   left: 50%;
   top: 50%;
+}
+.name-header {
+  justify-content: space-between;
+  display: flex;
 }
 h2 {
   margin-bottom: 20px;
@@ -200,5 +228,21 @@ button:nth-child(2) {
 button:nth-child(3) {
   background-color: #28a745;
   color: white;
+}
+.delete-btn {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.15rem;
+  color: red;
+  transition:
+    transform 0.2s ease-in-out,
+    color 0.3s;
+}
+.delete-btn:hover {
+  transform: scale(1.05);
+}
+.material-icons {
+  animation: shake 0.5s infinite alternate ease-in-out;
 }
 </style>

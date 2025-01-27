@@ -61,4 +61,25 @@ const updateProduct = (req, res) => {
   });
 };
 
-module.exports = { getProducts, addProduct, updateProduct };
+const deleteProduct = (req, res) => {
+  const { id } = req.params;
+
+  if (!id || isNaN(id))
+    return res.status(400).json({ error: "Invalid product ID" });
+
+  const query = "DELETE FROM products WHERE id = ?";
+
+  db.query(query, [id], (err, results) => {
+    if (err) {
+      console.error("Error deleting product:", err);
+      return res.status(500).json({ error: "Failed to delete product" });
+    }
+
+    if (results.affectedRows === 0)
+      return res.status(404).json({ error: "Product not found" });
+
+    res.status(200).json({ message: "Product deleted successfully" });
+  });
+};
+
+module.exports = { getProducts, addProduct, updateProduct, deleteProduct };

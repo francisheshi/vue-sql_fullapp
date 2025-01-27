@@ -28,5 +28,11 @@ export const useProductStore = defineStore('productStore', {
         this.products[index] = updatedProduct
       }
     },
+    deleteProduct(productId: number) {
+      const index = this.products.findIndex((p) => p.id === productId)
+      if (index !== -1) {
+        this.products.splice(index, 1)
+      }
+    },
   },
 })

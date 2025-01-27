@@ -6,5 +6,7 @@ const router = express.Router();
 
 router.use("/products", productsRoutes);
 router.use("/table-data", tableDataRoutes);
+router.post("/signup", userSigning);
+router.post("/signin", userSigning);
 
 module.exports = router;
