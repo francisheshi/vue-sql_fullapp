@@ -2,48 +2,70 @@ import { defineStore } from 'pinia'
 import axios from 'axios'
 
 interface AuthState {
-  token: string
-  user: unknown | null
+  isAuthenticated: false
+  user: [] | null
+  token: string | []
+  username: string | []
 }
 
 interface SignupData {
-  name: string
-  email: string
+  username: string
   password: string
+  email: string
 }
 
 interface SigninCredentials {
-  email: string
+  username: string
   password: string
 }
 
 interface AuthResponse {
+  message(message: []): unknown
+  success: [] | ''
   token: string
-  user: unknown // Change this if the backend returns a specific user object
+  user: []
 }
 
 export const useAuthStore = defineStore('authStore', {
   state: (): AuthState => ({
-    user: null,
     token: localStorage.getItem('token') || '',
+    username: localStorage.getItem('username') || null,
+    isAuthenticated: false,
+    user: null,
   }),
   actions: {
-    async signup(userData: SignupData): Promise<void> {
-      await axios.post('http://localhost:5000/api/register', userData)
+    async signup(userData: SignupData) {
+      try {
+        const response = await axios.post<AuthResponse>(
+          'http://localhost:5000/api/register',
+          userData,
+        )
+        return response.data
+      } catch (error) {
+        console.error('Error during signup:', error)
+        throw error
+      }
     },
-    async signin(credentials: SigninCredentials): Promise<void> {
+    async signin(credentials: SigninCredentials) {
       const response = await axios.post<AuthResponse>(
         'http://localhost:5000/api/signin',
         credentials,
       )
-      this.token = response.data.token ?? '' // Ensure `token` is always a string
-      this.user = response.data.user ?? null // Store user data if available
+      this.token = response.data.token
       localStorage.setItem('token', this.token)
+      return response.data
+    },
+    setToken(token: string, username: string) {
+      this.token = token
+      this.username = username
+      localStorage.setItem('token', token)
+      localStorage.setItem('username', username)
     },
     logout(): void {
-      this.token = ''
-      this.user = null
+      this.token = null
+      this.username = null
       localStorage.removeItem('token')
+      localStorage.removeItem('username')
     },
   },
 })

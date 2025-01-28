@@ -1,42 +1,46 @@
 <template>
-  <div>
-    <h2>Sign In</h2>
-    <form @submit.prevent="handleSignin">
-      <input v-model="email" type="email" placeholder="Email" required />
-      <input v-model="password" type="password" placeholder="Password" required />
-      <button type="submit">Sign In</button>
-    </form>
-  </div>
+  <h2>Sign In</h2>
+  <form @submit.prevent="handleSignin">
+    <input v-model="username" type="username" placeholder="Username" required />
+    <input v-model="password" type="password" placeholder="Password" required />
+    <button type="submit">Sign In</button>
+  </form>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { ref } from 'vue'
 import { useAuthStore } from '@/stores/authStore'
 import { useRouter } from 'vue-router'
 
-export default defineComponent({
+export default {
   name: 'SignIn',
   setup() {
     const authStore = useAuthStore()
     const router = useRouter()
+    const username = ref('')
     const password = ref('')
-    const email = ref('')
 
     const handleSignin = async () => {
       try {
-        await authStore.signin({ email: email.value, password: password.value })
-        router.push('/shop-now')
+        const response = await authStore.signin({
+          username: username.value,
+          password: password.value,
+        })
+
+        if (response.success) {
+          localStorage.setItem('token', response.token)
+          alert('Signin successful! Redirecting...')
+          router.push('/shop-now')
+        } else {
+          alert(response.message)
+        }
       } catch (error) {
-        console.error('Sign-in failed:', error)
-        alert('Invalid credentials. Please try again.')
+        console.error('Signin failed:', error)
+        alert('Signin failed. Please try again.')
       }
     }
 
-    return {
-      email,
-      password,
-      handleSignin,
-    }
+    return { username, password, handleSignin }
   },
-})
+}
 </script>

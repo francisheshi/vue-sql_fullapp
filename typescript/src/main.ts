@@ -11,7 +11,6 @@ import TodoList from '@/views/lists/TodoList.vue'
 import Cards from '@/views/cards/OpenCards.vue'
 import App from '@/App.vue'
 /* STYLIZATION */
-// import { createTheme, ThemeProvider } from '@mui/material/styles'
 import '@mui/material/styles/createTypography'
 import SignUp from './views/authentication/SignUp.vue'
 import SignIn from './views/authentication/SignIn.vue'
