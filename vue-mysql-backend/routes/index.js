@@ -1,12 +1,13 @@
-const express = require("express");
-const productsRoutes = require("./products");
 const tableDataRoutes = require("./tableData");
+const productsRoutes = require("./products");
+const userSigning = require("./userSigning");
+const express = require("express");
 
 const router = express.Router();
 
-router.use("/products", productsRoutes);
 router.use("/table-data", tableDataRoutes);
-router.post("/signup", userSigning);
-router.post("/signin", userSigning);
+router.use("/products", productsRoutes);
+router.use("/register", userSigning);
+router.use("/signin", userSigning);
 
 module.exports = router;
